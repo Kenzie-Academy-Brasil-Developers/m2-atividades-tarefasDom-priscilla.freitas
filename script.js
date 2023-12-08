@@ -13,67 +13,76 @@ const tasks = [
 
 
 function renderElements(tasks) {
-    // declara a variável que selecionar a ul
     const list = document.querySelector("ul");
 
     list.innerHTML = "";
 
-    // para cada task, chama a function createTaskItem, 
-    //passando uma task 
-    //e retornando uma li     
     for (let i = 0; i < tasks.length; i++) {
         const tasksLi = createTaskItem(tasks[i]);
 
-        //colocando tasksLi dentro da ul
         list.appendChild(tasksLi);
     }
+
 
 }
 
 
+const botao = document.querySelector(".form__button--add-task");
+
+botao.addEventListener("click", function (event) {
+    event.preventDefault();
+    const titulo = document.getElementById("input_title").value;
+    const tipo = document.querySelector(".form__input--priority").value;
+
+    const task = {
+        title: titulo,
+        type: tipo
+    }
+
+    tasks.push(task);
+
+    renderElements(tasks)
+});
+
 renderElements(tasks)
 
-function createTaskItem(object) {
-    //criação de li
-    const liItem = document.createElement("li")
-    // criação div
-    const divContainer = document.createElement("div")
 
-    // criação de span e p
+function createTaskItem(object) {
+    const liItem = document.createElement("li")
+    const divContainer = document.createElement("div")
     const spanType = document.createElement("span")
     const pName = document.createElement("p")
-
-    // criação do botão remove
     const btnRemove = document.createElement("button")
 
-    // substituindo texto de p
     pName.innerText = object.title;
 
-    // adicionado as classes ao div e span
     liItem.classList.add("task__item")
     divContainer.classList.add("task-info__container")
     spanType.classList.add("task-type")
     btnRemove.classList.add("task__button--remove-task")
 
-    // de acordo com o tipo será atribuido a classe ao elemento span
     if (object.type.toLowerCase() === "urgente") {
         spanType.classList.add("span-urgent")
     } else if (object.type.toLowerCase() === "importante") {
         spanType.classList.add("span-important")
     } else if (object.type.toLowerCase() === "normal") {
         spanType.classList.add("span-normal")
+
     }
+    btnRemove.addEventListener("click", function () {
+        const index = tasks.indexOf(object)
 
-    // colocando span e p dentro da div
+        tasks.splice(index, 1)
+
+        renderElements(tasks)
+    });
+
     divContainer.append(spanType, pName);
-
-    // colocando a div dentro da li    
     liItem.append(divContainer);
 
-
-    // colocando button dentro da li
     liItem.append(btnRemove)
 
-    //retornando li
     return (liItem)
+
 }
+
